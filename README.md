@@ -4,7 +4,7 @@ A ETH (POA) Network which is being maintained by RumSystem.net
 
 ## Ethereum
 
-- Blockchain Explorer: `[https://explorer.rumsystem.net](https://explorer.rumsystem.net)`
+- Blockchain Explorer: [`https://explorer.rumsystem.net`](https://explorer.rumsystem.net)
 - RPC API: `http://149.56.22.113:8545`
 - Chain ID: `19890609`
 - Genesis JSON: `https://raw.githubusercontent.com/Press-One/rum-eth/main/quorum.json`
