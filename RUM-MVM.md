@@ -44,7 +44,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 
     # [SELF_ENCODED_ARGS] should be a string with length <= 98.
     ```
-
+ 
 ## Development Workflow `(to debug your DApp via Mixin bot)`
 
 - Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md);
