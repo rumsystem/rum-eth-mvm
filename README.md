@@ -19,6 +19,6 @@ This is a docset repo containing everything you need to know about developing DA
 1. [Invoke](RUM-MVM.md) the `MVM-APP` in your project.
 1. [Trace](RUM-ETH.md) the `Contract Status` on `RUM-ETH`.
 
-## DApps
+## DApp Examples
 
 - PaidGroup
