@@ -2,7 +2,7 @@
 
 一個運行在 RUM-ETH-MVM 環境的 DApp 範例。這個項目展示針對 RUM-ETH-MVM 環境開發的細節。
 
-## 通過官方 MVM API 代理調用`（可通過 REST API 直接整合到現有應用）`
+## 通過官方 MVM API 代理調用 `（可通過 REST API 直接整合到現有應用）`
 
 - Announce a Paidgroup
     ```bash
@@ -31,6 +31,6 @@
     http GET 'https://prs-bp2.press.one/api/paidgroup/[GROUP_UUID]/[USER_ADDRESS]'
     ```
 
-## 直接調用`（需要自己維護 MVM 環境）`
+## 直接調用 `（需要自己維護 MVM 環境）`
 
 - [Development](Development.md)
