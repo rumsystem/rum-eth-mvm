@@ -15,9 +15,9 @@ This is a docset repo containing everything you need to know about developing DA
 ## Development Workflow
 
 1. Deploy an `EVM Compatible Contract` on [RUM-ETH](RUM-ETH.md).
-1. [Publish](RUM-MVM.md) the Contract as a MVM-APP.
-1. [Invoke](RUM-MVM.md) MVM-APP in your project.
-1. [Trace](RUM-ETH.md) the Contract Status on RUM-ETH.
+1. [Publish](RUM-MVM.md) the `Contract` as a `MVM-APP`.
+1. [Invoke](RUM-MVM.md) the `MVM-APP` in your project.
+1. [Trace](RUM-ETH.md) the `Contract Status` on `RUM-ETH`.
 
 ## DApps
 
