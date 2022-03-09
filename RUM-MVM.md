@@ -45,7 +45,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 ## Development Workflow `(to debug your DApp via Mixin bot)`
 
 - Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md);
-- Add this bot (7000100209) as a contact in your Mixin app.
+- Add this bot `(7000100209)` as a contact in your Mixin app.
 - Apply for a New Bot to Host MVM-APP: `MVM BOT`
     <img width="700" alt="Screen Shot 2022-02-15 at 7 41 23 PM" src="https://user-images.githubusercontent.com/233022/154175020-9a1ab4ea-c848-492f-891c-897446edb388.png">
     <img width="700" alt="Screen Shot 2022-02-15 at 7 41 28 PM" src="https://user-images.githubusercontent.com/233022/154175069-8965d655-772d-4729-ab8d-badefaa7293f.png">
