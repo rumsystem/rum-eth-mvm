@@ -6,7 +6,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 
 ## MVM
 
-- MVM TOML: [`https://raw.githubusercontent.com/Press-One/rum-eth-mvm/main/mvm.toml`](https://raw.githubusercontent.com/Press-One/rum-eth-mvm/main/mvm.toml)
+- MVM TOML: [`https://raw.githubusercontent.com/Press-One/rum-eth-mvm/main/public/mvm.toml`](https://raw.githubusercontent.com/Press-One/rum-eth-mvm/main/public/mvm.toml)
 
 ## Production Workflow `(to deploy your DApp via REST API)`
 
@@ -44,7 +44,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 
     # [SELF_ENCODED_ARGS] should be a string with length <= 98.
     ```
- 
+
 ## Development Workflow `(to debug your DApp via Mixin bot)`
 
 - Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md);
