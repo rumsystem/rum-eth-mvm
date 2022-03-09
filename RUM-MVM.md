@@ -18,7 +18,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
     ```bash
     echo '{}' | http POST 'https://prs-bp2.press.one/api/mvm/applybot'
     ```
-- Publish Contract as a New MVM-APP
+- Publish a Contract as a New MVM-APP
     ```bash
     echo '{
         "contractAddress": "0xf0e75e53f0aec66e9536c7d9c7afcdb140acde19",
@@ -46,16 +46,19 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 
 - Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md);
 - Add this bot `(7000100209)` as a contact in your Mixin app.
-- Apply for a New Bot to Host MVM-APP: `MVM BOT`
+- Apply for a New Bot to Host MVM-APP
+    ```
+    Mixin: MVM BOT
+    ```
     <img width="700" alt="Screen Shot 2022-02-15 at 7 41 23 PM" src="https://user-images.githubusercontent.com/233022/154175020-9a1ab4ea-c848-492f-891c-897446edb388.png">
     <img width="700" alt="Screen Shot 2022-02-15 at 7 41 28 PM" src="https://user-images.githubusercontent.com/233022/154175069-8965d655-772d-4729-ab8d-badefaa7293f.png">
-- Publish Contract as a New MVM-APP: `MVM PUB [CONTRACT ADDRESS] [CONTRACT HASH] [KEYSTORE]`
+- Publish a Contract as a New MVM-APP `(save the [APP-ID] for later use)`
+    ```
+    Mixin: MVM PUB [CONTRACT ADDRESS] [CONTRACT HASH] [KEYSTORE]
+    ```
     <img width="700" alt="Screen Shot 2022-02-15 at 7 41 41 PM" src="https://user-images.githubusercontent.com/233022/154175119-cb85bff0-1424-4dec-a462-60af5fcaedff.png">
-- Invoke a MVM-APP: `MVM INVOKE [MVM-APP-ID | 'APP ID' in 'MVM PUB' response] [EXTRA | OPTIONAL]`
+- Invoke a MVM-APP
+    ```
+    Mixin: MVM INVOKE [MVM-APP-ID] [EXTRA | OPTIONAL]
+    ```
     <img width="700" alt="Screen Shot 2022-01-12 at 11 14 51 PM" src="https://user-images.githubusercontent.com/233022/157370763-a486563b-3b10-475c-933e-fbfda239caba.png">
-
-
-## Under The Hook
-
-- [Testing Environment](TEST_ENV.md)
-- [Production Environment](PROD_ENV.md)
