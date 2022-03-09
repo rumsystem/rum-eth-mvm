@@ -16,7 +16,8 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
     ```
 - Apply for a New Bot to Host MVM-APP
     ```bash
-    echo '{}' | http POST 'https://prs-bp2.press.one/api/mvm/applybot'
+    echo '{
+    }' | http POST 'https://prs-bp2.press.one/api/mvm/applybot'
     ```
 - Publish a Contract as a New MVM-APP
     ```bash
@@ -37,7 +38,9 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
     ```
 - Invoke a MVM-APP
     ```bash
-    echo '{"extra": "[SELF_ENCODED_ARGS]"}' | http POST 'https://prs-bp2.press.one/api/mvm/[APP-ID]/invoke'
+    echo '{
+        "extra": "[SELF_ENCODED_ARGS]"
+    }' | http POST 'https://prs-bp2.press.one/api/mvm/[APP-ID]/invoke'
 
     # [SELF_ENCODED_ARGS] should be a string with length <= 98.
     ```
