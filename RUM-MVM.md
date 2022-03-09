@@ -10,12 +10,12 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 
 ## Production Workflow (to deploy your DApp via REST API)
 
-- Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md);
+- Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md) `(save the [contractAddress] and [contractHash] for later use)`;
 - Apply for a New Bot to Host MVM-APP
     ```bash
     echo '{}' | http POST 'https://prs-bp2.press.one/api/mvm/applybot'
     ```
-- Publish Contract as a New MVM-APP `(save the 'APP-ID' for later use)`
+- Publish Contract as a New MVM-APP `(save the [APP-ID] for later use)`
     ```bash
     echo '{
         "contractAddress": "0xf0e75e53f0aec66e9536c7d9c7afcdb140acde19",
@@ -23,16 +23,16 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
         "keystore": {
             "client_id":"1b40c257-0752-3821-a8bc-387c9f95c6dd",
             "session_id":"650e5ad0-a3e5-4b1b-b531-5c6f91b431cf",
-            "private_key":"DnsHbO1yp1Ez3AiLxXaY2DbMfy374HE9VmBKQabJrr9LLvlrwvtxY8/DeY+BKWZUiSbhh8Hk0gfw/uOJBWUz8w==",
-            "pin_token":"m2r8LiVVHnQmFbSj/QlFQL7ENIh415Z+oc5o/dZ11xQ=",
+            "private_key":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "pin_token":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "scope":"",
-            "pin":"212159"
+            "pin":"xxxxxx"
         }
     }' | http POST 'https://prs-bp2.press.one/api/mvm/publish'
     ```
-- Invoke a MVM-APP
+- Invoke a MVM-APP `([SELF_ENCODED_ARGS] should be a string with length <= 98)`
     ```bash
-    echo '{"extra": "SELF_ENCODED_ARGS | LENGTH <= 98"}' | http POST 'https://prs-bp2.press.one/api/mvm/[APP-ID]/invoke'
+    echo '{"extra": "[SELF_ENCODED_ARGS]"}' | http POST 'https://prs-bp2.press.one/api/mvm/[APP-ID]/invoke'
     ```
 
 ## Development Workflow (to debug your DApp via Mixin bot)
