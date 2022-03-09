@@ -19,7 +19,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
     <img width="1021" alt="Screen Shot 2022-02-15 at 7 41 41 PM" src="https://user-images.githubusercontent.com/233022/154175119-cb85bff0-1424-4dec-a462-60af5fcaedff.png">
 - Invoke a MVM-APP: `MVM INVOKE [MVM-APP-ID] [EXTRA | OPTIONAL]`
     `get MVM-APP-ID from  MVM PUB response, it is APP ID or keystore.client_id`
-    ![Screenshot](https://github.com/Press-One/mvm-dev/blob/main/images/Screen%20Shot%202022-01-12%20at%2011.14.51%20PM.png?raw=true)
+    <img width="801" alt="Screen Shot 2022-01-12 at 11 14 51 PM" src="https://user-images.githubusercontent.com/233022/157370763-a486563b-3b10-475c-933e-fbfda239caba.png">
 
 ## Development Workflow (integrate with your APP via HTTP APIs)
 
