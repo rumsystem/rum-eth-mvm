@@ -8,14 +8,17 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 
 - MVM TOML: [`https://raw.githubusercontent.com/Press-One/rum-eth-mvm/main/mvm.toml`](https://raw.githubusercontent.com/Press-One/rum-eth-mvm/main/mvm.toml)
 
-## Production Workflow (to deploy your DApp via REST API)
+## Production Workflow `(to deploy your DApp via REST API)`
 
-- Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md) `(save the [contractAddress] and [contractHash] for later use)`;
+- Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md)
+    ```
+    # Save the [contractAddress] and [contractHash] for later use.
+    ```
 - Apply for a New Bot to Host MVM-APP
     ```bash
     echo '{}' | http POST 'https://prs-bp2.press.one/api/mvm/applybot'
     ```
-- Publish Contract as a New MVM-APP `(save the [APP-ID] for later use)`
+- Publish Contract as a New MVM-APP
     ```bash
     echo '{
         "contractAddress": "0xf0e75e53f0aec66e9536c7d9c7afcdb140acde19",
@@ -29,13 +32,17 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
             "pin":"xxxxxx"
         }
     }' | http POST 'https://prs-bp2.press.one/api/mvm/publish'
+
+    # Save the [APP-ID] for later use.
     ```
-- Invoke a MVM-APP `([SELF_ENCODED_ARGS] should be a string with length <= 98)`
+- Invoke a MVM-APP
     ```bash
     echo '{"extra": "[SELF_ENCODED_ARGS]"}' | http POST 'https://prs-bp2.press.one/api/mvm/[APP-ID]/invoke'
+
+    # [SELF_ENCODED_ARGS] should be a string with length <= 98
     ```
 
-## Development Workflow (to debug your DApp via Mixin bot)
+## Development Workflow `(to debug your DApp via Mixin bot)`
 
 - Deploy Contract (https://remix.ethereum.org/) on [RUM-ETH](RUM-ETH.md);
 - Add this bot (7000100209) as a contact in your Mixin app.
