@@ -39,7 +39,7 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
     ```bash
     echo '{"extra": "[SELF_ENCODED_ARGS]"}' | http POST 'https://prs-bp2.press.one/api/mvm/[APP-ID]/invoke'
 
-    # [SELF_ENCODED_ARGS] should be a string with length <= 98
+    # [SELF_ENCODED_ARGS] should be a string with length <= 98.
     ```
 
 ## Development Workflow `(to debug your DApp via Mixin bot)`
