@@ -13,12 +13,12 @@ A [MVM](https://github.com/MixinNetwork/trusted-group/tree/master/mvm/) Network 
 - Deploy Contract (https://remix.ethereum.org/)
 - Add this bot (7000100209) as a contact in your Mixin app.
 - Apply for a New Bot to Host MVM-APP: `MVM BOT`
-    <img width="1000" alt="Screen Shot 2022-02-15 at 7 41 23 PM" src="https://user-images.githubusercontent.com/233022/154175020-9a1ab4ea-c848-492f-891c-897446edb388.png">
-    <img width="1000" alt="Screen Shot 2022-02-15 at 7 41 28 PM" src="https://user-images.githubusercontent.com/233022/154175069-8965d655-772d-4729-ab8d-badefaa7293f.png">
+    <img width="700" alt="Screen Shot 2022-02-15 at 7 41 23 PM" src="https://user-images.githubusercontent.com/233022/154175020-9a1ab4ea-c848-492f-891c-897446edb388.png">
+    <img width="700" alt="Screen Shot 2022-02-15 at 7 41 28 PM" src="https://user-images.githubusercontent.com/233022/154175069-8965d655-772d-4729-ab8d-badefaa7293f.png">
 - Publish Contract as a New MVM-APP: `MVM PUB [CONTRACT ADDRESS] [CONTRACT HASH] [KEYSTORE]`
-    <img width="1021" alt="Screen Shot 2022-02-15 at 7 41 41 PM" src="https://user-images.githubusercontent.com/233022/154175119-cb85bff0-1424-4dec-a462-60af5fcaedff.png">
+    <img width="700" alt="Screen Shot 2022-02-15 at 7 41 41 PM" src="https://user-images.githubusercontent.com/233022/154175119-cb85bff0-1424-4dec-a462-60af5fcaedff.png">
 - Invoke a MVM-APP: `MVM INVOKE [MVM-APP-ID] [EXTRA | OPTIONAL]` `set \`MVM-APP-ID\` as \`APP ID\` from \`MVM PUB\` response`
-    <img width="801" alt="Screen Shot 2022-01-12 at 11 14 51 PM" src="https://user-images.githubusercontent.com/233022/157370763-a486563b-3b10-475c-933e-fbfda239caba.png">
+    <img width="700" alt="Screen Shot 2022-01-12 at 11 14 51 PM" src="https://user-images.githubusercontent.com/233022/157370763-a486563b-3b10-475c-933e-fbfda239caba.png">
 
 ## Development Workflow (integrate with your APP via HTTP APIs)
 
