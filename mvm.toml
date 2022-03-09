@@ -1,0 +1,9 @@
+[mtg.genesis]
+members = [
+  "e5cf999b-638d-40c2-8062-3fa45aada788",
+  "fe0312b0-5929-436e-98cc-ec9251daba4b",
+  "9478537e-6171-455f-a219-9bfb843e35d8",
+  "39a0a6d5-245a-44ef-92ef-49e3ae69d362",
+]
+threshold = 3
+timestamp = 1646154844067000000
