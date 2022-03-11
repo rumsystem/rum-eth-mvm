@@ -9,11 +9,9 @@ contract PaidGroup is MixinProcess {
 
     // 保存付费群组的价格
     struct Price {
-        bytes mixinReceiver;             // group owner mixin receiver address; value is event.members
+        bytes mixinReceiver;     // group owner mixin receiver address; value is event.members
         uint64 price;
-        bool isLifeMember;       // 终生会员
         uint64 duration;         // 付费后的有效期
-        // uint numberOfMembers;  // 会员数量
     }
 
     // 保存所有付费群的信息
@@ -23,8 +21,7 @@ contract PaidGroup is MixinProcess {
     struct Member {
         uint128 groupId;
         uint64 price;
-        bool isLifeMember;  // 终生会员
-        uint256 expiredAt;     // 过期时间；如果 isLifeMember != true，expiredAt = duration + paidAt，expiredAt > now 决定没有过期
+        uint256 expiredAt;     // 过期时间；expiredAt = duration + paidAt，expiredAt > now 决定没有过期
     }
 
     enum Action {
@@ -56,28 +53,6 @@ contract PaidGroup is MixinProcess {
     // 完成支付的事件
     event AlreadyPaid(address indexed user, Member member);
 
-    // xxxx record extra
-    Extra[] public extra_logs;
-    Event[] public event_logs;
-    string[] public extra_str_logs;
-    bytes[] public extra_bytes_logs;
-
-    function getExtraStrLogs(uint i) public view returns (string memory) {
-        return extra_str_logs[i];
-    }
-
-    function getExtraBytesLogs(uint i) public view returns (bytes memory) {
-        return extra_bytes_logs[i];
-    }
-
-    function getExtraLogs(uint i) public view returns (Extra memory) {
-        return extra_logs[i];
-    }
-
-    function getEventLogs(uint i) public view returns (Event memory) {
-        return event_logs[i];
-    }
-
     // PID is a UUID of Mixin Messenger user, e.g. 27d0c319-a4e3-38b4-93ff-cb45da8adbe1
     uint128 public constant PID = 0xfd5a9224799b374da0524f1c7b1b8c8c;
 
@@ -89,16 +64,8 @@ contract PaidGroup is MixinProcess {
     function _work(Event memory evt) internal override(MixinProcess) returns (bool) {
       require(evt.timestamp > 0, "invalid timestamp");
       // require(evt.nonce % 2 == 1, "not an odd nonce");
-      // string memory extra_str = string(abi.encodePacked(evt.extra));
-      // extra_str_logs.push(extra_str);
-      // bytes memory extra = fromHex(extra_str);
-      event_logs.push(evt);
-      extra_bytes_logs.push(evt.extra);
-      
+    
       Extra memory ext = _parse_extra(evt.extra);
-      // xxxxx
-      extra_logs.push(ext);
-
 
       require(ext.groupId > 0, "invalid group id");
       // check eth address
@@ -107,7 +74,7 @@ contract PaidGroup is MixinProcess {
         require(ext.duration > 0, "invalid paid group duration");
         require(ext.amount > 0, "invalid paid group price");
 
-        addPrice(ext.groupId, evt.members, false, ext.duration, ext.amount);
+        addPrice(ext.groupId, evt.members, ext.duration, ext.amount);
       } else if (ext.action == Action.PayForGroup) {
         if (! isPaid(ext.rumAddress, ext.groupId)) {
           pay(ext.rumAddress, ext.groupId);
@@ -164,32 +131,6 @@ contract PaidGroup is MixinProcess {
         return ext;
     }
 
-    // Convert an hexadecimal character to their value
-    function fromHexChar(uint8 c) public pure returns (uint8) {
-        uint8 val;
-        if (bytes1(c) >= bytes1('0') && bytes1(c) <= bytes1('9')) {
-            val = c - uint8(bytes1('0'));
-        } else if (bytes1(c) >= bytes1('a') && bytes1(c) <= bytes1('f')) {
-            val = 10 + c - uint8(bytes1('a'));
-        } else if (bytes1(c) >= bytes1('A') && bytes1(c) <= bytes1('F')) {
-            val = 10 + c - uint8(bytes1('A'));
-        }
-
-        return val;
-    }
-
-    // Convert an hexadecimal string to raw bytes
-    function fromHex(string memory s) public pure returns (bytes memory) {
-        bytes memory ss = bytes(s);
-        require(ss.length%2 == 0); // length must be even
-        bytes memory r = new bytes(ss.length/2);
-        for (uint i=0; i<ss.length/2; ++i) {
-            r[i] = bytes1(fromHexChar(uint8(ss[2*i])) * 16 +
-                        fromHexChar(uint8(ss[2*i+1])));
-        }
-        return r;
-    }
-
     // This modifier prevents a function from being called while
     // it is still executing.
     modifier noReentrancy() {
@@ -213,20 +154,12 @@ contract PaidGroup is MixinProcess {
     }
 
     // add the price of paid group
-    function addPrice(uint128 _groupId, bytes memory receiver, bool _isLifeMember, uint64 _duration, uint64 _price) public {
+    function addPrice(uint128 _groupId, bytes memory receiver, uint64 _duration, uint64 _price) public {
         Price memory item = Price({
             mixinReceiver: receiver,
             price: _price,
-            isLifeMember: false,
             duration: _duration
         });
-        if (_isLifeMember) {
-            item.isLifeMember = true;
-            item.duration = 0;
-        } else {
-            item.isLifeMember = false;
-            item.duration = _duration;
-        }
 
         priceList[_groupId] = item;
 
@@ -234,15 +167,11 @@ contract PaidGroup is MixinProcess {
     }
 
     // update the price of paid group
-    function updatePrice(uint128 _groupId, bool _isLifeMember, uint64 _duration, uint64 _price) public {
+    function updatePrice(uint128 _groupId, uint64 _duration, uint64 _price) public {
         Price storage item = priceList[_groupId];
 
         item.price = _price;
-        if (_isLifeMember) {
-            item.isLifeMember = _isLifeMember;
-        } else {
-            item.duration = _duration;
-        }
+        item.duration = _duration;
 
         emit UpdatePrice(_groupId, item);
     }
@@ -256,15 +185,6 @@ contract PaidGroup is MixinProcess {
     // generate the key of memberList
     function getMemberKey(address addr, uint128 groupId) public pure returns (bytes memory) {
         return bytes.concat(abi.encodePacked(addr), '@', toBytes(groupId));
-    }
-
-    // check if the two string is equal
-    function stringEqual(string memory a, string memory b) public pure returns (bool) {
-        if (keccak256(bytes(a)) == keccak256(bytes(b))) {
-            return true;
-        }
-
-        return false;
     }
 
     // get paid detail
@@ -281,7 +201,7 @@ contract PaidGroup is MixinProcess {
         bytes memory key = getMemberKey(user, groupId);
         Member memory m = memberList[key];
 
-        if (m.isLifeMember || m.expiredAt > block.timestamp) {
+        if (m.expiredAt > block.timestamp) {
             return true;
         }
 
@@ -306,14 +226,8 @@ contract PaidGroup is MixinProcess {
         Member memory member = Member({
             groupId: groupId,
             price: item.price,
-            isLifeMember: false,
-            expiredAt: 0
+            expiredAt: block.timestamp + item.duration
         });
-        if (item.isLifeMember) {
-            member.isLifeMember = true;
-        } else {
-            member.expiredAt = block.timestamp + item.duration;
-        }
 
         memberList[key] = member;
 
