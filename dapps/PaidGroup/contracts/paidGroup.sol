@@ -7,6 +7,16 @@ import {MixinProcess} from './mixin.sol';
 contract PaidGroup is MixinProcess {
     using BytesLib for bytes;
 
+    // 保存Dapp的基本信息
+    struct DappInfo {
+        string name;
+        string developer;  // 开发者 或 开发团队的名称
+        address owner;     // owner 的 eth address
+        uint64 invokeFee;  // 调用 mvm invoke 为 group owner 做 announce group price 时收取的费用
+        uint64 shareRatio; // group owner share ratio，比如：80 代表 group owner 会分走 80%
+    }
+    DappInfo private dappInfo;
+
     // 保存付费群组的价格
     struct Price {
         bytes mixinReceiver;     // group owner mixin receiver address; value is event.members
@@ -53,11 +63,40 @@ contract PaidGroup is MixinProcess {
     // 完成支付的事件
     event AlreadyPaid(address indexed user, Member member);
 
+    constructor ()  {
+     dappInfo = DappInfo({
+        name: "Paid Group",
+        developer: "Quorum Team",
+        owner: msg.sender,
+        invokeFee: 5 * 1e8,  // 确保单位和 evt.amount 一样
+        shareRatio: 80
+      });
+    }
+
     // PID is a UUID of Mixin Messenger user, e.g. 27d0c319-a4e3-38b4-93ff-cb45da8adbe1
-    uint128 public constant PID = 0xfd5a9224799b374da0524f1c7b1b8c8c;
+    uint128 public constant PID = 0x4fb3209f2c08369d9688604312e9aa1d;
 
     function _pid() internal pure override(MixinProcess) returns (uint128) {
       return PID;
+    }
+
+    // This modifier prevents a function from being called while
+    // it is still executing.
+    modifier noReentrancy() {
+        require(!locked, "No reentrancy");
+
+        locked = true;
+        _;
+        locked = false;
+    }
+
+    modifier ownerOnly() {
+        require(msg.sender == dappInfo.owner, "owner only");
+        _;
+    }
+
+    function getDappInfo() public view returns (DappInfo memory) {
+      return dappInfo;
     }
 
     // entry
@@ -73,21 +112,23 @@ contract PaidGroup is MixinProcess {
       if (ext.action == Action.AnnounceGroupPrice) {
         require(ext.duration > 0, "invalid paid group duration");
         require(ext.amount > 0, "invalid paid group price");
+        require(evt.amount == dappInfo.invokeFee, "invalid invoke fee");
 
         addPrice(ext.groupId, evt.members, ext.duration, ext.amount);
       } else if (ext.action == Action.PayForGroup) {
-        if (! isPaid(ext.rumAddress, ext.groupId)) {
-          pay(ext.rumAddress, ext.groupId);
-          // send 0.8 * evt.amount to group owner
-          Price memory price = priceList[ext.groupId];
-          bytes memory mixinReceiver = price.mixinReceiver;
-          uint256 amount = evt.amount * 8 / 10;
+        require(! isPaid(ext.rumAddress, ext.groupId), "already paid");
+        require(dappInfo.shareRatio > 0 && dappInfo.shareRatio <= 100, "invalid share ratio");
 
-          require(price.price == evt.amount, "invalid paid group price");  // 确保单位一致
+        pay(ext.rumAddress, ext.groupId);
+        // send dappInfo.shareRatio / 100 * evt.amount to group owner
+        Price memory price = priceList[ext.groupId];
+        bytes memory mixinReceiver = price.mixinReceiver;
+        uint256 amount = evt.amount * dappInfo.shareRatio / 100;
 
-          bytes memory log = buildMixinTransaction(evt.nonce, evt.asset, amount, "paid group", mixinReceiver);
-          emit MixinTransaction(log);
-        }
+        require(price.price == evt.amount, "invalid paid group price");  // 确保单位一致
+
+        bytes memory log = buildMixinTransaction(evt.nonce, evt.asset, amount, "paid group", mixinReceiver);
+        emit MixinTransaction(log);
       } else {
           revert("un-support action");
       }
@@ -104,7 +145,7 @@ contract PaidGroup is MixinProcess {
     }
 
     // parse extra
-    function _parse_extra(bytes memory extra) public pure returns (Extra memory) {
+    function _parse_extra(bytes memory extra) private pure returns (Extra memory) {
         Extra memory ext;
         uint128 offset = 0;
 
@@ -131,16 +172,6 @@ contract PaidGroup is MixinProcess {
         return ext;
     }
 
-    // This modifier prevents a function from being called while
-    // it is still executing.
-    modifier noReentrancy() {
-        require(!locked, "No reentrancy");
-
-        locked = true;
-        _;
-        locked = false;
-    }
-
     // get the price of paid group
     function getPrice(uint128 _groupId) public view returns (uint64) {
         Price memory item = priceList[_groupId];
@@ -154,7 +185,7 @@ contract PaidGroup is MixinProcess {
     }
 
     // add the price of paid group
-    function addPrice(uint128 _groupId, bytes memory receiver, uint64 _duration, uint64 _price) public {
+    function addPrice(uint128 _groupId, bytes memory receiver, uint64 _duration, uint64 _price) private {
         Price memory item = Price({
             mixinReceiver: receiver,
             price: _price,
@@ -167,7 +198,7 @@ contract PaidGroup is MixinProcess {
     }
 
     // update the price of paid group
-    function updatePrice(uint128 _groupId, uint64 _duration, uint64 _price) public {
+    function updatePrice(uint128 _groupId, uint64 _duration, uint64 _price) private {
         Price storage item = priceList[_groupId];
 
         item.price = _price;
@@ -210,7 +241,7 @@ contract PaidGroup is MixinProcess {
 
     // paid group member，实际的支付会在mixin中完成
     // user 应该是 msg.sender，但这个接口由 mvm 调用；所以，作为参数让 mvm 传入
-    function pay(address user, uint128 groupId) public {
+    function pay(address user, uint128 groupId) private {
         Price storage item = priceList[groupId];
 
         require(item.price > 0, "can not find group price");
