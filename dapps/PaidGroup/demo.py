@@ -1,6 +1,11 @@
-import sys
 from config import conf
 from config import w3, contract, send_tx, tx_params
+
+
+def get_dapp_info():
+    res = contract.functions.getDappInfo().call()
+    print(f'dapp info: {res}')
+    return res
 
 
 def get_group_price(group_id):
@@ -49,26 +54,14 @@ duration = 60 * 60 * 24 * 365
 price = 420000 * 2
 user = w3.toChecksumAddress('0x729d862c8a47e0600e35fd4acef14e2b00b9d0cd')
 
-for idx in range(2):
-    get_extra_logs(idx)
-    # get_event_logs(idx)
-get_group_price(group_id)
+get_dapp_info()
 
+get_group_price(group_id)
 get_group_price_detail(group_id)
 
-# add group price
-# tx = contract.functions.addPrice(group_id, group_owner, False, duration, price).buildTransaction(tx_params())
-# print(send_tx(tx))
-# get_group_price(group_id)
-# get_group_price_detail(group_id)
-
 # get member key
-res = contract.functions.getMemberKey(user, group_id).call()
-print('member key:', res)
-
-# pay group price
-# tx = contract.functions.pay(user, group_id).buildTransaction(tx_params())
-# print(send_tx(tx))
+# res = contract.functions.getMemberKey(user, group_id).call()
+# print('member key:', res)
 
 # get paid detail
 get_paid_detail(user, group_id)
