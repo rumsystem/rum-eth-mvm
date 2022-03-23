@@ -74,7 +74,9 @@ contract PaidGroup is MixinProcess {
   }
 
   // PID is a UUID of Mixin Messenger user, e.g. 27d0c319-a4e3-38b4-93ff-cb45da8adbe1
-  uint128 public constant PID = 0x4fb3209f2c08369d9688604312e9aa1d;
+  uint128 public constant PID = 0xfa5dea6e9375371499eba423b60149c5;
+  // 参考 mvm encoding/event.go；两头的0001 是 len(members) 和 threshold；中间是 mixin id -> uuid -> bytes
+  bytes private platformMixinReceiver = hex"0001beb05804f083498eac0faf6d7fbcd6940001";
 
   function _pid() internal pure override(MixinProcess) returns (uint128) {
     return PID;
@@ -107,6 +109,7 @@ contract PaidGroup is MixinProcess {
     Extra memory ext = _parse_extra(evt.extra);
 
     require(ext.groupId > 0, "invalid group id");
+    // check eth address
 
     if (ext.action == Action.AnnounceGroupPrice) {
       require(ext.duration > 0, "invalid paid group duration");
@@ -114,6 +117,10 @@ contract PaidGroup is MixinProcess {
       require(evt.amount == dappInfo.invokeFee, "invalid invoke fee");
 
       addPrice(ext.groupId, evt.members, ext.duration, ext.amount);
+
+      // 转给platform
+      bytes memory log = buildMixinTransaction(evt.nonce, evt.asset, evt.amount, "announce group", platformMixinReceiver);
+      emit MixinTransaction(log);
     } else if (ext.action == Action.PayForGroup) {
       require(! isPaid(ext.rumAddress, ext.groupId), "already paid");
       require(dappInfo.shareRatio > 0 && dappInfo.shareRatio <= 100, "invalid share ratio");
@@ -126,7 +133,12 @@ contract PaidGroup is MixinProcess {
 
       require(price.price == evt.amount, "invalid paid group price");  // 确保单位一致
 
+      // 转给 group owner
       bytes memory log = buildMixinTransaction(evt.nonce, evt.asset, amount, "paid group", mixinReceiver);
+      emit MixinTransaction(log);
+
+      // 转给platform
+      log = buildMixinTransaction(evt.nonce + 1, evt.asset, evt.amount - amount, "pay group", platformMixinReceiver);
       emit MixinTransaction(log);
     } else {
       revert("un-support action");
