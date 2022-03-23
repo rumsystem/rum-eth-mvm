@@ -109,7 +109,6 @@ contract PaidGroup is MixinProcess {
     Extra memory ext = _parse_extra(evt.extra);
 
     require(ext.groupId > 0, "invalid group id");
-    // check eth address
 
     if (ext.action == Action.AnnounceGroupPrice) {
       require(ext.duration > 0, "invalid paid group duration");
