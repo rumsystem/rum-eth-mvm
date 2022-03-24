@@ -10,6 +10,7 @@ contract PaidGroup is MixinProcess {
   // 保存Dapp的基本信息
   struct DappInfo {
     string name;
+    string version;
     string developer;  // 开发者 或 开发团队的名称
     address owner;     // owner 的 eth address
     uint64 invokeFee;  // 调用 mvm invoke 为 group owner 做 announce group price 时收取的费用
@@ -66,11 +67,14 @@ contract PaidGroup is MixinProcess {
   constructor ()  {
     dappInfo = DappInfo({
       name: "Paid Group",
+      version: "0.0.1",
       developer: "Quorum Team",
       owner: msg.sender,
       invokeFee: 5 * 1e8,  // 确保单位和 evt.amount 一样
       shareRatio: 80
     });
+
+    require(dappInfo.shareRatio > 0 && dappInfo.shareRatio <= 100, "invalid share ratio");
   }
 
   // PID is a UUID of Mixin Messenger user, e.g. 27d0c319-a4e3-38b4-93ff-cb45da8adbe1
@@ -122,7 +126,6 @@ contract PaidGroup is MixinProcess {
       emit MixinTransaction(log);
     } else if (ext.action == Action.PayForGroup) {
       require(! isPaid(ext.rumAddress, ext.groupId), "already paid");
-      require(dappInfo.shareRatio > 0 && dappInfo.shareRatio <= 100, "invalid share ratio");
 
       pay(ext.rumAddress, ext.groupId);
       // send dappInfo.shareRatio / 100 * evt.amount to group owner
