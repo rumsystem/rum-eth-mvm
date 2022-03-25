@@ -1,5 +1,28 @@
 [
     {
+        "inputs": [
+            {
+                "internalType": "uint128",
+                "name": "_groupId",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint64",
+                "name": "_duration",
+                "type": "uint64"
+            },
+            {
+                "internalType": "uint64",
+                "name": "_price",
+                "type": "uint64"
+            }
+        ],
+        "name": "addPrice",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
@@ -77,6 +100,19 @@
         "type": "event"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint128",
+                "name": "groupId",
+                "type": "uint128"
+            }
+        ],
+        "name": "pay",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
@@ -134,10 +170,14 @@
                 "type": "uint64"
             }
         ],
-        "name": "addPrice",
+        "name": "updatePrice",
         "outputs": [],
         "stateMutability": "payable",
         "type": "function"
+    },
+    {
+        "stateMutability": "payable",
+        "type": "receive"
     },
     {
         "inputs": [],
@@ -373,19 +413,6 @@
     {
         "inputs": [
             {
-                "internalType": "uint128",
-                "name": "groupId",
-                "type": "uint128"
-            }
-        ],
-        "name": "pay",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "uint256",
                 "name": "x",
                 "type": "uint256"
@@ -401,32 +428,5 @@
         ],
         "stateMutability": "pure",
         "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint128",
-                "name": "_groupId",
-                "type": "uint128"
-            },
-            {
-                "internalType": "uint64",
-                "name": "_duration",
-                "type": "uint64"
-            },
-            {
-                "internalType": "uint64",
-                "name": "_price",
-                "type": "uint64"
-            }
-        ],
-        "name": "updatePrice",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "stateMutability": "payable",
-        "type": "receive"
     }
 ]

@@ -47,7 +47,7 @@ contract PaidGroup {
       name: "Paid Group",
       version: "0.0.1",
       developer: "Quorum Team",
-      owner: payable(msg.sender),  // 平台收款地址
+      owner: payable(address(0xF0E75E53f0AEC66E9536c7D9c7afCDB140aCDE19)),  // 平台收款地址
       invokeFee: 1 * 1e8,
       shareRatio: 80
     });
