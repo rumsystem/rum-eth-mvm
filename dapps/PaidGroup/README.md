@@ -4,6 +4,10 @@
 
 ## 通過官方 MVM API 代理調用 `（可通過 REST API 直接整合到現有應用）`
 
+- Get Info of Paidgroup DApp
+    ```bash
+    http GET 'https://prs-bp2.press.one/api/mvm/paidgroup'
+    ```
 - Announce a Paidgroup
     ```bash
     echo '{
@@ -11,24 +15,24 @@
         "owner": "[OWNER_ADDRESS]",
         "amount": "[CNB PRICE in STRING]",
         "duration": [SECONDS in INTEGER]
-    }' | http POST 'https://prs-bp2.press.one/api/paidgroup/announce'
+    }' | http POST 'https://prs-bp2.press.one/api/mvm/paidgroup/announce'
 
     # This testing DApp instant use CNB as settlement currency.
     ```
 - Get Detail of a Paidgroup
     ```bash
-    http GET 'https://prs-bp2.press.one/api/paidgroup/[GROUP_UUID]'
+    http GET 'https://prs-bp2.press.one/api/mvm/paidgroup/[GROUP_UUID]'
     ```
 - Pay for a Paidgroup
     ```bash
     echo '{
         "user": "[USER_ADDRESS]",
         "group": "[GROUP_UUID]"
-    }' | http POST 'https://prs-bp2.press.one/api/api/paidgroup/pay'
+    }' | http POST 'https://prs-bp2.press.one/api/mvm/paidgroup/pay'
     ```
 - Check Payment by `[GROUP_UUID]` and `[USER_ADDRESS]`
     ```bash
-    http GET 'https://prs-bp2.press.one/api/paidgroup/[GROUP_UUID]/[USER_ADDRESS]'
+    http GET 'https://prs-bp2.press.one/api/mvm/paidgroup/[GROUP_UUID]/[USER_ADDRESS]'
     ```
 
 ## 直接調用 `（需要自己維護 MVM 環境）`
