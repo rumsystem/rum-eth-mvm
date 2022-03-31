@@ -19,35 +19,15 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   // deploy library
-  const BytesLib = await hre.ethers.getContractFactory("BytesLib");
-  const bytesLib = await BytesLib.deploy();
-  await bytesLib.deployed();
-  console.log("deployed BytesLib contract at:", bytesLib.address);
-
   const BLS = await hre.ethers.getContractFactory("BLS");
   const bls = await BLS.deploy();
   await bls.deployed();
   console.log("deployed BLS contract at:", bls.address);
 
-  /*
-  const MixinProcess = await hre.ethers.getContractFactory("MixinProcess");
-  const mixinProcess = await MixinProcess.deploy();
-  console.log("deployed MixinProcess contract at:", mixinProcess.address);
-
-  const PaidGroup = await hre.ethers.getContractFactory("PaidGroupMVM", {
-    libraries: {
-      "BLS": bls.address,
-      "BytesLib": bytesLib.address,
-      // MixinProcess: mixinProcess.address,
-    },
-  });
-  */
-
   // We get the contract to deploy
   const PaidGroup = await hre.ethers.getContractFactory("PaidGroupMVM", {
     libraries: {
       "BLS": bls.address,
-      // "BytesLib": bytesLib.address,
     },
   });
 
