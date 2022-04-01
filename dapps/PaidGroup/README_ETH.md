@@ -36,4 +36,4 @@
 
 ## 直接調用 `（需要自己維護 ETH 環境）`
 
-- [Development](paid-group-eth/README.md)
+- [Development](../paid-group-eth/README.md)
