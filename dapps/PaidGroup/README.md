@@ -6,7 +6,7 @@
 
 - Get Info of Paidgroup DApp
     ```bash
-    http GET 'https://prs-bp2.press.one/api/mvm/paidgroup'
+    http GET 'https://prs-bp2.press.one/api/dapps/PaidGroupMvm'
     ```
 - Announce a Paidgroup
     ```bash
