@@ -1,5 +1,9 @@
 # ETH contract for Paid Group
 
+## 调用
+
+- 合约地址：0x55fd10c1F89127f5eF58176fB0D294b766842F5b
+
 ## .env
 
 ```

@@ -1,0 +1,4 @@
+## 调用
+
+- 合约地址：0x95CB926eaDe1A04dFEC6fDfF7C2F6eDb46f32C39
+- 部署的 block hash: 0xdf2ee98f39bad4d6977ba524eca9a634fb46b99f8108a12919f903c8957be63c
