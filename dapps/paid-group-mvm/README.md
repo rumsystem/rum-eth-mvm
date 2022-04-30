@@ -1,4 +1,4 @@
-# PaidGroup
+# PaidGroupMVM
 
 一個運行在 RUM-ETH-MVM 環境的 DApp 範例。這個項目展示針對 RUM-ETH-MVM 環境開發的細節。
 
