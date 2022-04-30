@@ -21,4 +21,5 @@ This is a docset repo containing everything you need to know about developing DA
 
 ## DApp Examples
 
-- [PaidGroup](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/PaidGroup)
+- [PaidGroupEth](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/paid-group-eth)
+- [PaidGroupMvm](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/paid-group-mvm)
