@@ -109,3 +109,4 @@ __pycache__/
 .DS_Store
 .envrc
 .privatekey
+package-lock.json

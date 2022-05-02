@@ -27,11 +27,7 @@ contract RumERC20 {
 
     event Transfer(address indexed from, address indexed to, uint256 value);
 
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
+    event Approval(address indexed owner, address indexed spender, uint256 value);
 
     function name() public view virtual returns (string memory) {
         return _name;
@@ -53,11 +49,7 @@ contract RumERC20 {
         return _balances[account];
     }
 
-    function rumTransfer(
-        address recipient,
-        uint256 amount,
-        string memory uuid
-    ) public virtual returns (bool) {
+    function rumTransfer(address recipient, uint256 amount, string memory uuid) public virtual returns (bool) {
         bytes memory uuidBytes = bytes(uuid);
         require(uuidBytes.length != 0, "RumERC20: uuid is empty");
         require(!_uuidRecord[uuid], "RumERC20: this transfer has done");
@@ -66,11 +58,7 @@ contract RumERC20 {
         return true;
     }
 
-    function rumApprove(
-        address spender,
-        uint256 amount,
-        string memory uuid
-    ) public virtual returns (bool) {
+    function rumApprove(address spender, uint256 amount, string memory uuid) public virtual returns (bool) {
         bytes memory uuidBytes = bytes(uuid);
         require(uuidBytes.length != 0, "RumERC20: uuid is empty");
         require(!_uuidRecord[uuid], "RumERC20: this approve has done");
@@ -91,10 +79,7 @@ contract RumERC20 {
         _transfer(sender, recipient, amount);
 
         uint256 currentAllowance = _allowances[sender][_msgSender()];
-        require(
-            currentAllowance >= amount,
-            "RumERC20: transfer amount exceeds allowance"
-        );
+        require(currentAllowance >= amount, "RumERC20: transfer amount exceeds allowance");
         unchecked {
             _approve(sender, _msgSender(), currentAllowance - amount);
         }
@@ -103,29 +88,16 @@ contract RumERC20 {
         return true;
     }
 
-    function transfer(address recipient, uint256 amount)
-        public
-        virtual
-        returns (bool)
-    {
+    function transfer(address recipient, uint256 amount) public virtual returns (bool) {
         _transfer(_msgSender(), recipient, amount);
         return true;
     }
 
-    function allowance(address owner, address spender)
-        public
-        view
-        virtual
-        returns (uint256)
-    {
+    function allowance(address owner, address spender) public view virtual returns (uint256) {
         return _allowances[owner][spender];
     }
 
-    function approve(address spender, uint256 amount)
-        public
-        virtual
-        returns (bool)
-    {
+    function approve(address spender, uint256 amount) public virtual returns (bool) {
         _approve(_msgSender(), spender, amount);
         return true;
     }
@@ -138,10 +110,7 @@ contract RumERC20 {
         _transfer(sender, recipient, amount);
 
         uint256 currentAllowance = _allowances[sender][_msgSender()];
-        require(
-            currentAllowance >= amount,
-            "RumERC20: transfer amount exceeds allowance"
-        );
+        require(currentAllowance >= amount, "RumERC20: transfer amount exceeds allowance");
         unchecked {
             _approve(sender, _msgSender(), currentAllowance - amount);
         }
@@ -154,20 +123,11 @@ contract RumERC20 {
         address recipient,
         uint256 amount
     ) internal virtual {
-        require(
-            sender != address(0),
-            "RumERC20: transfer from the zero address"
-        );
-        require(
-            recipient != address(0),
-            "RumERC20: transfer to the zero address"
-        );
+        require(sender != address(0), "RumERC20: transfer from the zero address");
+        require(recipient != address(0), "RumERC20: transfer to the zero address");
 
         uint256 senderBalance = _balances[sender];
-        require(
-            senderBalance >= amount,
-            "RumERC20: transfer amount exceeds balance"
-        );
+        require(senderBalance >= amount, "RumERC20: transfer amount exceeds balance");
         unchecked {
             _balances[sender] = senderBalance - amount;
         }
@@ -200,3 +160,4 @@ contract RumERC20 {
         return msg.sender;
     }
 }
+
