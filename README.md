@@ -23,3 +23,6 @@ This is a docset repo containing everything you need to know about developing DA
 
 - [PaidGroupEth](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/paid-group-eth)
 - [PaidGroupMvm](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/paid-group-mvm)
+- [RumAccount](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/RumAccount)
+- [RumERC20](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/RumERC20)
+- [RumSC](https://github.com/Press-One/rum-eth-mvm/tree/main/dapps/RumSC)
