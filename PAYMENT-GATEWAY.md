@@ -6,6 +6,12 @@ RUM Payment Gateway is fully Compatible with [ERC20 standard](https://ethereum.o
 
 ## API:
 
+- Request Fee
+    ```bash
+    $ echo '{
+        "account": "[ACCOUNT_ADDRESS]"
+    }' | http POST 'https://prs-bp2.press.one/api/coins/fee'
+    ```
 - Get Account Information
     ```bash
     $ http GET 'https://prs-bp2.press.one/api/accounts/[ACCOUNT_ADDRESS]'
