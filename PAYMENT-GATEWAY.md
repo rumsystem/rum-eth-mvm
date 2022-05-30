@@ -36,7 +36,7 @@ RUM Payment Gateway is fully Compatible with [ERC20 standard](https://ethereum.o
     ```
 - Get Transactions
     ```bash
-    $ http GET 'https://prs-bp2.press.one/api/coins/transactions?asset=[COIN_SYMBOL|OPTIONAL]&account=[ACCOUNT_ADDRESS|OPTIONAL]'
+    $ http GET 'https://prs-bp2.press.one/api/coins/transactions?asset=[COIN_SYMBOL|OPTIONAL]&account=[ACCOUNT_ADDRESS|OPTIONAL]&type=[DEPOSIT/WITHDRAW|OPTIONAL]&uuid=[TRX_UUID|OPTIONAL]'
 - Withdraw
     ```bash
     $ http GET 'https://prs-bp2.press.one/api/coins/withdraw?asset=[COIN_SYMBOL]&amount=[AMOUNT]'
