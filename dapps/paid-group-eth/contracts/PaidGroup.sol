@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0 <0.9.0;
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
+import { RumERC20 } from "./RumERC20.sol";
 
 contract PaidGroup {
   // 保存Dapp的基本信息
@@ -11,7 +12,7 @@ contract PaidGroup {
     string developer;         // 开发者 或 开发团队的名称
     address payable receiver; // owner收款的 eth address
     address payable deployer; // owner部署的 eth address
-    uint64 invokeFee;         // 调用 mvm invoke 为 group owner 做 announce group price 时收取的费用
+    uint256 invokeFee;         // 调用 mvm invoke 为 group owner 做 announce group amount 时收取的费用
     uint64 shareRatio;        // group owner share ratio，比如：80 代表 group owner 会分走 80%
   }
   DappInfo private dappInfo;
@@ -19,7 +20,8 @@ contract PaidGroup {
   // 保存付费群组的价格
   struct Price {
     address payable owner; // group owner eth address
-    uint64 price;
+    address tokenAddr;      // token contract address
+    uint256 amount;         // token amount
     uint64 duration;       // 付费后的有效期
   }
 
@@ -29,7 +31,8 @@ contract PaidGroup {
   // 支付会员
   struct Member {
     uint128 groupId;
-    uint64 price;
+    uint256 amount;
+    address tokenAddr;
     uint256 expiredAt; // 过期时间；expiredAt = duration + paidAt，expiredAt > now 决定没有过期
   }
 
@@ -63,8 +66,8 @@ contract PaidGroup {
     _;
   }
 
-  function initialize(string memory _version, uint64 _invokeFee,  uint64 _shareRatio) public {
-    console.log("initialize PaidGroup ...");
+  function initialize(string memory _version, uint256 _invokeFee,  uint64 _shareRatio) public {
+    // console.log("initialize PaidGroup ...");
     require(!initialized, "Contract instance has already been initialized");
     initialized = true;
 
@@ -82,7 +85,15 @@ contract PaidGroup {
     });
   }
 
-  function updateDappInfo(string memory _version, uint64 _invokeFee, uint64 _shareRatio) public ownerOnly {
+  // 判断两个 string 是否相等
+  function isEqualString(string memory a, string memory b) public pure returns (bool) {
+    if(bytes(a).length != bytes(b).length) {
+      return false;
+    }
+    return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
+  }
+
+  function updateDappInfo(string memory _version, uint256 _invokeFee, uint64 _shareRatio) public ownerOnly {
     require(_invokeFee > 0, "invalid invoke fee");
     require(_shareRatio > 0 && _shareRatio <= 100, "invalid share ratio");
 
@@ -105,31 +116,27 @@ contract PaidGroup {
     return address(this).balance;
   }
 
-  // get the price of paid group
-  function getPrice(uint128 _groupId) public view returns (uint64) {
-    Price memory item = priceList[_groupId];
-    return item.price;
-  }
-
   // get the price detail of paid group
-  function getPriceDetail(uint128 _groupId) public view returns (Price memory) {
+  function getPrice(uint128 _groupId) public view returns (Price memory) {
     Price memory item = priceList[_groupId];
     return item;
   }
 
   // add the price of paid group
-  function addPrice(uint128 _groupId, uint64 _duration, uint64 _price) payable public noReentrancy {
-    console.log("addPrice, groupId: %s duration: %d price: %d ...", _groupId, _duration, _price);
+  function addPrice(uint128 _groupId, uint64 _duration, address _tokenAddr, uint256 _amount) payable public noReentrancy {
+    // console.log("addPrice, groupId: %s duration: %d tokenType: %s amount: %d ...", _groupId, _duration, _tokenAddr, _amount);
 
     require(msg.value == dappInfo.invokeFee, "invalid invoke fee");
     require(_groupId > 0, "invalid group id");
-    require(_price > 0, "invalid price");
     require(_duration > 0, "invalid duration");
-    require(priceList[_groupId].owner == address(0), "group price already announced");
+    require(_amount > 0, "invalid token amount");
+    require(_tokenAddr != address(0), "invalid token contract address");
+    require(priceList[_groupId].owner == address(0), "group amount already announced");
 
     Price memory item = Price({
       owner: payable(msg.sender),
-      price: _price,
+      amount: _amount,
+      tokenAddr: _tokenAddr,
       duration: _duration
     });
 
@@ -140,18 +147,20 @@ contract PaidGroup {
     emit AnnouncePrice(_groupId, item);
   }
 
-  // update the price of paid group
-  function updatePrice(uint128 _groupId, uint64 _duration, uint64 _price) payable public noReentrancy {
-    console.log("updatePrice, groupId: %s duration: %d price: %d ...", _groupId, _duration, _price);
+  // update the amount of paid group
+  function updatePrice(uint128 _groupId, uint64 _duration, address _tokenAddr, uint256 _amount) payable public noReentrancy {
+    // console.log("updatePrice, groupId: %s duration: %d tokenType: %s amount: %d ...", _groupId, _duration, _tokenAddr, _amount);
     require(msg.value == dappInfo.invokeFee, "invalid invoke fee");
     require(_groupId > 0, "invalid group id");
+    require(_tokenAddr != address(0), "invalid token contract address");
     address user = payable(msg.sender);
     Price storage item = priceList[_groupId];
 
-    require(item.owner == user, "only group owner can update price");
+    require(item.owner == user, "only group owner can update amount");
 
-    if (_price > 0) {
-      item.price = _price;
+    if (_amount > 0) {
+      item.amount = _amount;
+      item.tokenAddr = _tokenAddr;
     }
     if (_duration > 0) {
       item.duration = _duration;
@@ -159,7 +168,7 @@ contract PaidGroup {
 
     dappInfo.receiver.transfer(msg.value);
 
-    if (_price > 0 || _duration > 0) {
+    if (_amount > 0 || _duration > 0) {
       emit UpdatePrice(_groupId, item);
     }
   }
@@ -186,7 +195,7 @@ contract PaidGroup {
   // check if the user is a paid group member
   // user is the eth address of the quorum user
   function isPaid(address user, uint128 groupId) public view returns (bool) {
-    console.log("isPaid, user: %s groupId: %s ...", user, groupId);
+    // console.log("isPaid, user: %s groupId: %s ...", user, groupId);
 
     bytes memory key = getMemberKey(user, groupId);
     Member memory m = memberList[key];
@@ -201,18 +210,22 @@ contract PaidGroup {
   function pay(uint128 groupId) payable public noReentrancy {
     Price storage item = priceList[groupId];
 
-    require(item.price > 0, "can not find group price");
-    require(item.price == msg.value, "invalid pay price");
+    require(item.amount > 0, "can not find group price");
+    require(item.tokenAddr != address(0), "invalid token contract address");
 
     address payable user = payable(msg.sender);
 
     // 检查 user 成员，看看是不是已经付费了？
     require(!isPaid(user, groupId), "already paid");
 
+    require(RumERC20(item.tokenAddr).allowance(user, address(this)) >= item.amount, "please approve token allowance");
+    RumERC20(item.tokenAddr).transferFrom(user, address(this), item.amount);
+
     // 更新 memberList
     Member memory member = Member({
       groupId: groupId,
-      price: item.price,
+      tokenAddr: item.tokenAddr,
+      amount: item.amount,
       expiredAt: block.timestamp + item.duration
     });
 
@@ -220,9 +233,9 @@ contract PaidGroup {
     memberList[key] = member;
 
     // 将钱分给group owner 和 平台
-    uint256 amount = msg.value * dappInfo.shareRatio / 100;
-    item.owner.transfer(amount);
-    dappInfo.receiver.transfer(msg.value - amount);
+    uint256 ownerAmount = item.amount * dappInfo.shareRatio / 100;
+    RumERC20(item.tokenAddr).transfer(item.owner, ownerAmount);
+    RumERC20(item.tokenAddr).transfer(dappInfo.receiver, item.amount - ownerAmount);
 
     emit AlreadyPaid(user, member);
   }
