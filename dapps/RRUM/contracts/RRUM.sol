@@ -199,4 +199,20 @@ contract RumERC20 {
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
     }
+
+    function deposit() public payable {
+        _balances[msg.sender] += msg.value;
+        emit Transfer(address(0), msg.sender, msg.value);
+    }
+
+    function withdraw(uint256 value) public {
+        require(
+            _balances[msg.sender] >= value,
+            "RRUM: burn amount exceeds balance"
+        );
+        _balances[msg.sender] -= value;
+        (bool success, ) = msg.sender.call{value: value}("");
+        require(success, "RRUM: RUM transfer failed");
+        emit Transfer(msg.sender, address(0), value);
+    }
 }
