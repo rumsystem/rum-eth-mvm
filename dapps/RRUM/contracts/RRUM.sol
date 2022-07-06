@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.2;
 
-contract RumERC20 {
+contract RRUM {
     mapping(address => uint256) private _balances;
 
     mapping(address => mapping(address => uint256)) private _allowances;
@@ -59,8 +59,8 @@ contract RumERC20 {
         string memory uuid
     ) public virtual returns (bool) {
         bytes memory uuidBytes = bytes(uuid);
-        require(uuidBytes.length != 0, "RumERC20: uuid is empty");
-        require(!_uuidRecord[uuid], "RumERC20: this transfer has done");
+        require(uuidBytes.length != 0, "RRUM: uuid is empty");
+        require(!_uuidRecord[uuid], "RRUM: this transfer has done");
         _transfer(_msgSender(), recipient, amount);
         _uuidRecord[uuid] = true;
         return true;
@@ -72,8 +72,8 @@ contract RumERC20 {
         string memory uuid
     ) public virtual returns (bool) {
         bytes memory uuidBytes = bytes(uuid);
-        require(uuidBytes.length != 0, "RumERC20: uuid is empty");
-        require(!_uuidRecord[uuid], "RumERC20: this approve has done");
+        require(uuidBytes.length != 0, "RRUM: uuid is empty");
+        require(!_uuidRecord[uuid], "RRUM: this approve has done");
         _approve(_msgSender(), spender, amount);
         _uuidRecord[uuid] = true;
         return true;
@@ -86,14 +86,14 @@ contract RumERC20 {
         string memory uuid
     ) public virtual returns (bool) {
         bytes memory uuidBytes = bytes(uuid);
-        require(uuidBytes.length != 0, "RumERC20: uuid is empty");
-        require(!_uuidRecord[uuid], "RumERC20: this transferFrom has done");
+        require(uuidBytes.length != 0, "RRUM: uuid is empty");
+        require(!_uuidRecord[uuid], "RRUM: this transferFrom has done");
         _transfer(sender, recipient, amount);
 
         uint256 currentAllowance = _allowances[sender][_msgSender()];
         require(
             currentAllowance >= amount,
-            "RumERC20: transfer amount exceeds allowance"
+            "RRUM: transfer amount exceeds allowance"
         );
         unchecked {
             _approve(sender, _msgSender(), currentAllowance - amount);
@@ -140,7 +140,7 @@ contract RumERC20 {
         uint256 currentAllowance = _allowances[sender][_msgSender()];
         require(
             currentAllowance >= amount,
-            "RumERC20: transfer amount exceeds allowance"
+            "RRUM: transfer amount exceeds allowance"
         );
         unchecked {
             _approve(sender, _msgSender(), currentAllowance - amount);
@@ -154,19 +154,13 @@ contract RumERC20 {
         address recipient,
         uint256 amount
     ) internal virtual {
-        require(
-            sender != address(0),
-            "RumERC20: transfer from the zero address"
-        );
-        require(
-            recipient != address(0),
-            "RumERC20: transfer to the zero address"
-        );
+        require(sender != address(0), "RRUM: transfer from the zero address");
+        require(recipient != address(0), "RRUM: transfer to the zero address");
 
         uint256 senderBalance = _balances[sender];
         require(
             senderBalance >= amount,
-            "RumERC20: transfer amount exceeds balance"
+            "RRUM: transfer amount exceeds balance"
         );
         unchecked {
             _balances[sender] = senderBalance - amount;
@@ -177,7 +171,7 @@ contract RumERC20 {
     }
 
     function _mint(address account, uint256 amount) internal virtual {
-        require(account != address(0), "RumERC20: mint to the zero address");
+        require(account != address(0), "RRUM: mint to the zero address");
 
         _totalSupply += amount;
         _balances[account] += amount;
@@ -189,8 +183,8 @@ contract RumERC20 {
         address spender,
         uint256 amount
     ) internal virtual {
-        require(owner != address(0), "RumERC20: approve from the zero address");
-        require(spender != address(0), "RumERC20: approve to the zero address");
+        require(owner != address(0), "RRUM: approve from the zero address");
+        require(spender != address(0), "RRUM: approve to the zero address");
 
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
